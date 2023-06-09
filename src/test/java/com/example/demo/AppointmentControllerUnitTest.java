@@ -60,7 +60,7 @@ class AppointmentControllerUnitTest{
 
         mockMvc.perform(post("/api/appointment").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(appointment)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
                 
     }
 
@@ -103,7 +103,7 @@ class AppointmentControllerUnitTest{
 
         mockMvc.perform(post("/api/appointment").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(appointment)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
                 
 
 
@@ -142,7 +142,7 @@ class AppointmentControllerUnitTest{
 
         mockMvc.perform(post("/api/appointment").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(appointment)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
                 
 
 
@@ -153,7 +153,7 @@ class AppointmentControllerUnitTest{
         when(appointmentRepository.findAll()).thenReturn(appointments);
         mockMvc.perform(post("/api/appointment").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(appointment2)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
                 
 
     }

@@ -1,0 +1,30 @@
+# Etapa 1: Compilar y ejecutar las pruebas
+FROM maven:3.8.4-openjdk-17-slim AS builder
+
+WORKDIR /app
+
+# Copiar el archivo pom.xml para resolver las dependencias
+COPY pom.xml .
+
+# Descargar todas las dependencias necesarias para compilar y ejecutar las pruebas
+RUN mvn dependency:go-offline -B
+
+# Copiar el código fuente del microservicio
+COPY src ./src
+
+# Compilar y ejecutar las pruebas
+RUN mvn clean package
+
+# Etapa 2: Ejecutar el microservicio
+FROM openjdk:17-slim
+
+WORKDIR /app
+
+# Copiar el archivo JAR generado en la etapa anterior
+COPY --from=builder /app/target/6482e886edc61a00292da1d8.jar .
+
+# Puerto en el que escucha el microservicio (ajustar según corresponda)
+EXPOSE 8080
+
+# Comando por defecto para ejecutar el microservicio
+CMD ["java", "-jar", "6482e886edc61a00292da1d8.jar"]

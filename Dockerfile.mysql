@@ -1,0 +1,14 @@
+FROM mysql:latest
+
+# Configurar variables de entorno de MySQL (opcional)
+ENV MYSQL_DATABASE=mydatabase
+ENV MYSQL_ROOT_PASSWORD=mysecretpassword
+
+# Copiar el script de inicialización de la base de datos (opcional)
+COPY ./database/init.sql /docker-entrypoint-initdb.d/
+
+# Puerto por defecto de MySQL (opcional)
+EXPOSE 3306
+
+# Comando por defecto para ejecutar el contenedor de MySQL (opcional)
+CMD ["mysqld"]

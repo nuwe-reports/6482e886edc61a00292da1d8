@@ -31,7 +31,9 @@ public class PatientController {
     public ResponseEntity<List<Patient>> getAllPatients(){
         List<Patient> patients = new ArrayList<>();
 
-        patientRepository.findAll().forEach(patients::add);
+        //patientRepository.findAll().forEach(patients::add);
+
+        patients = patientRepository.findAll();
 
         if (patients.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -1,30 +1,31 @@
-# Etapa 1: Compilar y ejecutar las pruebas
-FROM maven:3.8.4-openjdk-17-slim AS builder
-
+# Etapa 1: Etapa de pruebas
+FROM maven:3.8.4-openjdk-11 AS test
 WORKDIR /app
 
-# Copiar el archivo pom.xml para resolver las dependencias
+# Copia los archivos de la aplicación
 COPY pom.xml .
-
-# Descargar todas las dependencias necesarias para compilar y ejecutar las pruebas
-RUN mvn dependency:go-offline -B
-
-# Copiar el código fuente del microservicio
 COPY src ./src
 
-# Compilar y ejecutar las pruebas
-RUN mvn clean package
+# Ejecuta las pruebas
+RUN mvn test
 
-# Etapa 2: Ejecutar el microservicio
-FROM openjdk:17-slim
-
+# Etapa 2: Etapa de compilación y ejecución
+FROM maven:3.8.4-openjdk-11 AS build
 WORKDIR /app
 
-# Copiar el archivo JAR generado en la etapa anterior
-COPY --from=builder /app/target/6482e886edc61a00292da1d8.jar .
+# Copia los archivos de la aplicación
+COPY pom.xml .
+COPY src ./src
 
-# Puerto en el que escucha el microservicio (ajustar según corresponda)
-EXPOSE 8080
+# Compila y empaqueta el microservicio
+RUN mvn package -DskipTests
 
-# Comando por defecto para ejecutar el microservicio
+# Establece la imagen base para la ejecución
+FROM openjdk:11-jre-slim
+WORKDIR /app
+
+# Copia el artefacto compilado desde la etapa anterior
+COPY --from=build /app/target/6482e886edc61a00292da1d8.jar .
+
+# Ejecuta el microservicio
 CMD ["java", "-jar", "6482e886edc61a00292da1d8.jar"]
